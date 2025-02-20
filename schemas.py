@@ -5,34 +5,6 @@ from datetime import date
 from pydantic import BaseModel, Field, StrictStr, StrictInt
 from typing_extensions import ClassVar, List
 
-
-class User(BaseModel):
-    """
-    User
-    """
-    id: StrictInt = Field(description="Unique identifier for the user")
-    email: StrictStr = Field(description="The user's email address")
-    name: StrictStr = Field(description="The user's name")
-    date_of_birth: date = Field(description="The user's date of birth")
-    postcode: StrictStr = Field(description="The user's postcode")
-
-    __properties: ClassVar[List[str]] = ["id", "email", "name", "date_of_birth", "postcode"]
-
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-        }
-
-    def to_str(self) -> str:
-        """Returns the string representation of the model"""
-        return pprint.pformat(self.model_dump())
-
-    def to_json(self) -> str:
-        """Returns the JSON representation of the model"""
-        return json.dumps(self.to_dict(), default=str)
-
-
 class UserCreate(BaseModel):
     """
     UserCreate
@@ -59,22 +31,18 @@ class UserCreate(BaseModel):
         return json.dumps(self.to_dict(), default=str)
 
 
-class UserUpdate(BaseModel):
+class User(UserCreate):
+    """
+    User
+    """
+    id: StrictInt = Field(description="Unique identifier for the user")
+
+
+class UserUpdate(UserCreate):
     """
     UserUpdate
     """
-    email: StrictStr = Field(description="The user's email address")
-    name: StrictStr = Field(description="The user's name")
-    date_of_birth: date = Field(description="The user's date of birth")
-    postcode: StrictStr = Field(description="The user's postcode")
-
-    __properties: ClassVar[List[str]] = ["id", "email", "name", "date_of_birth", "postcode"]
-
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True,
-        "protected_namespaces": (),
-        }
+    pass
 
 
     def to_str(self) -> str:
