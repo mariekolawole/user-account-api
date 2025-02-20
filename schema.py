@@ -4,8 +4,9 @@ from datetime import date
 
 from pydantic import BaseModel, Field, StrictStr, StrictInt
 from typing_extensions import ClassVar, List
+from sqlmodel import SQLModel, Field
 
-class UserCreate(BaseModel):
+class UserCreate(SQLModel):
     """
     UserCreate
     """
@@ -31,11 +32,11 @@ class UserCreate(BaseModel):
         return json.dumps(self.to_dict(), default=str)
 
 
-class User(UserCreate):
+class User(UserCreate, table=True):
     """
     User
     """
-    id: StrictInt = Field(description="Unique identifier for the user")
+    id: StrictInt | None = Field(primary_key=True, default=None, description="Unique identifier for the user")
 
 
 class UserUpdate(UserCreate):
