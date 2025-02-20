@@ -6,9 +6,36 @@ from pydantic import BaseModel, Field, StrictStr, StrictInt
 from typing_extensions import ClassVar, List
 
 
-class UserBase(BaseModel):
+class User(BaseModel):
     """
-    User Base Model
+    User
+    """
+    id: StrictInt = Field(description="Unique identifier for the user")
+    email: StrictStr = Field(description="The user's email address")
+    name: StrictStr = Field(description="The user's name")
+    date_of_birth: date = Field(description="The user's date of birth")
+    postcode: StrictStr = Field(description="The user's postcode")
+
+    __properties: ClassVar[List[str]] = ["id", "email", "name", "date_of_birth", "postcode"]
+
+    model_config = {
+        "populate_by_name": True,
+        "validate_assignment": True,
+        "protected_namespaces": (),
+        }
+
+    def to_str(self) -> str:
+        """Returns the string representation of the model"""
+        return pprint.pformat(self.model_dump())
+
+    def to_json(self) -> str:
+        """Returns the JSON representation of the model"""
+        return json.dumps(self.to_dict(), default=str)
+
+
+class UserCreate(BaseModel):
+    """
+    UserCreate
     """
     email: StrictStr = Field(description="The user's email address")
     name: StrictStr = Field(description="The user's name")
@@ -29,27 +56,35 @@ class UserBase(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model"""
-        return json.dumps(self.to_dict())
+        return json.dumps(self.to_dict(), default=str)
 
 
-class User(UserBase):
-    """
-    User
-    """
-    id: StrictInt = Field(description="Unique identifier for the user")
-
-
-class UserCreate(UserBase):
-    """
-    UserCreate
-    """
-    pass
-
-class UserUpdate(UserBase):
+class UserUpdate(BaseModel):
     """
     UserUpdate
     """
-    pass
+    email: StrictStr = Field(description="The user's email address")
+    name: StrictStr = Field(description="The user's name")
+    date_of_birth: date = Field(description="The user's date of birth")
+    postcode: StrictStr = Field(description="The user's postcode")
+
+    __properties: ClassVar[List[str]] = ["id", "email", "name", "date_of_birth", "postcode"]
+
+    model_config = {
+        "populate_by_name": True,
+        "validate_assignment": True,
+        "protected_namespaces": (),
+        }
+
+
+    def to_str(self) -> str:
+        """Returns the string representation of the model"""
+        return pprint.pformat(self.model_dump())
+
+    def to_json(self) -> str:
+        """Returns the JSON representation of the model"""
+        return json.dumps(self.to_dict(), default=str)
+
 
 
 def load_users() -> List[User]:
@@ -62,4 +97,4 @@ def load_users() -> List[User]:
 
 def save_users(users: List[User]):
     with open("users.json", 'w') as f:
-        json.dump([user.model_dump() for user in users], f, indent=4)
+        json.dump([user.model_dump() for user in users], f, indent=4, default=str)
